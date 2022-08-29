@@ -1,5 +1,6 @@
 (ns cerber.helpers
   (:require [crypto.random :as random]
+            [clj-time.coerce]
             [clojure.string :as str]
             [failjure.core :as f]
             [digest])
@@ -23,7 +24,7 @@
   is expired or falsey otherwise. Item with no expires-at is non-expirable."
 
   [item]
-  (let [^java.sql.Timestamp expires-at (:expires-at item)]
+  (let [^java.sql.Timestamp expires-at (clj-time.coerce/to-timestamp (:expires-at item))]
     (and expires-at
          (.isBefore (.toLocalDateTime expires-at)
                     (java.time.LocalDateTime/now)))))
